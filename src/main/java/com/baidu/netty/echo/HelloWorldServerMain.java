@@ -1,4 +1,4 @@
-package com.baidu.netty;
+package com.baidu.netty.echo;
 
 import com.baidu.reactor.core.HtmlWrapperUtils;
 import io.netty.bootstrap.ServerBootstrap;

@@ -1,4 +1,4 @@
-package com.baidu.netty;
+package com.baidu.netty.echo;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
