@@ -14,7 +14,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class HelloWorldMain {
+public class HelloWorldServerMain {
 
     public static void main(String[] args) throws InterruptedException {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -27,17 +27,30 @@ public class HelloWorldMain {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                             @Override
+                            public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                                System.out.println("channelActive");
+                            }
+
+                            @Override
                             public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
                                 ByteBuf buf = (ByteBuf) msg;
                                 byte[] reg = new byte[buf.readableBytes()];
                                 buf.readBytes(reg);
                                 ByteBuf respByteBuf = Unpooled.copiedBuffer(HtmlWrapperUtils.wrapperHttpHtmlRepoonse(reg));
                                 ctx.write(respByteBuf);
+                                System.out.println("channelRead");
                             }
 
                             @Override
                             public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
                                 ctx.flush();
+                                System.out.println("channelReadComplete");
+                            }
+
+                            @Override
+                            public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                                cause.printStackTrace();
+                                ctx.close();
                             }
                         });
                     }
