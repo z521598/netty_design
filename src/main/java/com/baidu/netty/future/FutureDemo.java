@@ -19,8 +19,11 @@ public class FutureDemo {
 
     public static void main(String[] args) throws InterruptedException {
         EventLoopGroup eventExecutors = new NioEventLoopGroup();
+
         Channel channel = new NioSocketChannel();
         eventExecutors.register(channel);
+
+
         ChannelFuture channelFuture = channel.connect(new InetSocketAddress("www.baidu.com", 80));
         System.out.println("addListenerFuture start");
         channelFuture.addListener(new SendMessageChannelFutureListener());
