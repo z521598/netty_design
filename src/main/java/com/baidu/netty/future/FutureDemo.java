@@ -23,7 +23,6 @@ public class FutureDemo {
         Channel channel = new NioSocketChannel();
         eventExecutors.register(channel);
 
-
         ChannelFuture channelFuture = channel.connect(new InetSocketAddress("www.baidu.com", 80));
         System.out.println("addListenerFuture start");
         channelFuture.addListener(new SendMessageChannelFutureListener());
@@ -63,8 +62,8 @@ public class FutureDemo {
     public static class PrintChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
         protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-            System.out.println("本次read0数据大小: " + msg.toString(CharsetUtil.UTF_8).length());
-//            System.out.println(msg.toString(CharsetUtil.UTF_8));
+//            System.out.println("本次read0数据大小: " + msg.toString(CharsetUtil.UTF_8).length());
+            System.out.println(msg.toString(CharsetUtil.UTF_8));
         }
     }
 }

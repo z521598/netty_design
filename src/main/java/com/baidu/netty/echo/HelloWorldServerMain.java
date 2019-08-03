@@ -15,11 +15,16 @@ import io.netty.util.CharsetUtil;
 public class HelloWorldServerMain {
 
     public static void main(String[] args) throws InterruptedException {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(5);
+//        EventLoopGroup bo = new OioEventLoopGroup();
+//        EventLoopGroup bossGroup = new EpollEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup(10);
+//        EventLoopGroup workerGroup = new EpollEventLoopGroup();
+
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
+//                .channel(EpollServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
@@ -34,6 +39,7 @@ public class HelloWorldServerMain {
                                 String data = buf.toString(CharsetUtil.UTF_8);
                                 System.out.println("channelRead:" + data);
                                 ctx.writeAndFlush(buf);
+//                                ctx.fireChannelRead(msg);
                             }
 
                             @Override
@@ -50,7 +56,8 @@ public class HelloWorldServerMain {
                     }
                 });
         ChannelFuture f = bootstrap.bind(80).sync();
-        f.channel().closeFuture().sync();
+        f.channel().closeFuture().syncUninterruptibly();
+
 
     }
 
